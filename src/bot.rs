@@ -12,4 +12,5 @@ pub async fn send_message(msg: Message) {
     if let Err(e) = client.post(&uri).json(&body).send().await {
         log::error!("send_message Error: {}", e);
     }
+    log::info!("send message");
 }
