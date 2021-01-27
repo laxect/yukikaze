@@ -1,6 +1,6 @@
 FROM debian:buster AS builder
 
-RUN apt-get update && apt-get install -y curl build-essential openssl libssl-dev pkg-config
+RUN apt-get update && apt-get install -y curl build-essential
 
 # Install rust
 RUN curl https://sh.rustup.rs/ -sSf | \
@@ -13,8 +13,6 @@ ADD . ./
 RUN cargo build --release
 
 FROM debian:buster
-
-RUN apt-get update && apt-get install -y openssl libssl-dev
 
 COPY --from=builder \
   /target/release/yukikaze \

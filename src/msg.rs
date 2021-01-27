@@ -36,7 +36,7 @@ pub struct Message {
     #[serde(default)]
     mode: RenderMode,
     #[serde(default)]
-    disable_notification: bool,
+    disable_notification: bool, // default to false
 }
 
 impl Message {
