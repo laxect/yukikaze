@@ -4,5 +4,6 @@
   ],
   "automerge": true,
   "pinVersions": false,
-  "schedule": ["before 2am"]
+  "schedule": ["before 10am"],
+  "commitBody": "[skip ci]"
 }
