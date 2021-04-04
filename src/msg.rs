@@ -22,7 +22,7 @@ impl Default for RenderMode {
 impl From<RenderMode> for Option<ParseMode> {
     fn from(mode: RenderMode) -> Option<ParseMode> {
         match mode {
-            RenderMode::Markdown => ParseMode::Markdown.into(),
+            RenderMode::Markdown => ParseMode::MarkdownV2.into(),
             RenderMode::Html => ParseMode::HTML.into(),
             RenderMode::None => None,
         }
