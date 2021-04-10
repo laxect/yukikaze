@@ -6,7 +6,7 @@ use telegram_types::bot::{
 
 use crate::CHAT_ID;
 
-#[derive(Deserialize, Copy, Clone)]
+#[derive(Deserialize, Copy, Clone, Debug)]
 pub enum RenderMode {
     Markdown,
     Html,
@@ -29,7 +29,7 @@ impl From<RenderMode> for Option<ParseMode> {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Message {
     msg: String,
     node: String,
@@ -41,7 +41,7 @@ pub struct Message {
 
 impl Message {
     pub fn render(&self) -> String {
-        format!("{}\n\n---\n{} - 雪風改", self.msg, self.node)
+        format!("{}\n\n\\-\\-\\-\n{} \\- 雪風改", self.msg, self.node)
     }
 
     pub fn parse_mode(&self) -> Option<ParseMode> {

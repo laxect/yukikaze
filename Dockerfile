@@ -19,6 +19,7 @@ COPY --from=builder \
   /usr/local/bin/
 
 ENV PORT 8080
+ENV RUST_LOG="info"
 
 WORKDIR /root
 CMD PORT=$PORT /usr/local/bin/yukikaze

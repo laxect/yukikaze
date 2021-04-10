@@ -9,8 +9,11 @@ pub async fn send_message(msg: Message) {
     let uri = action("sendMessage");
     let pkg = msg.package();
     let client = reqwest::Client::new();
-    if let Err(e) = client.post(&uri).json(&pkg).send().await {
+    let resp = client.post(&uri).json(&pkg).send().await;
+    if let Err(e) = resp {
         log::error!("send_message Error: {}", e);
+    } else {
+        log::info!("send success. {}", resp.unwrap().text().await.unwrap_or_default())
     }
     log::info!("send message");
 }
