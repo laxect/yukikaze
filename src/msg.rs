@@ -30,7 +30,7 @@ impl From<RenderMode> for Option<ParseMode> {
     }
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Message {
     msg: String,
     node: String,
@@ -42,7 +42,7 @@ pub struct Message {
 
 impl Message {
     pub fn render(&self) -> String {
-        let msg = if self.mode == RenderMode::Markdown {
+        let mut msg = if self.mode == RenderMode::Markdown {
             let mut options = Options::empty();
             options.insert(Options::ENABLE_STRIKETHROUGH);
             let parser = Parser::new_ext(&self.msg, options);
@@ -52,8 +52,9 @@ impl Message {
         } else {
             self.msg.clone()
         };
-        let msg = msg.replace("\n", "").replace("<p>", "").replace("</p>", "\n");
-        format!("{}\n\n---\n{} - 雪風改", msg, self.node)
+        msg.pop();
+        let msg = msg.replace("<p>", "").replace("</p>", "\n");
+        format!("{}\n---\n{} - 雪風改", msg, self.node)
     }
 
     pub fn parse_mode(&self) -> Option<ParseMode> {
