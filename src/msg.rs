@@ -1,4 +1,6 @@
+use pulldown_cmark::{html, Options, Parser};
 use serde::Deserialize;
+use std::cmp::{Eq, PartialEq};
 use telegram_types::bot::{
     methods::{ChatTarget, SendMessage},
     types::{ChatId, ParseMode},
@@ -6,7 +8,7 @@ use telegram_types::bot::{
 
 use crate::CHAT_ID;
 
-#[derive(Deserialize, Copy, Clone, Debug)]
+#[derive(Deserialize, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum RenderMode {
     Markdown,
     Html,
@@ -22,8 +24,7 @@ impl Default for RenderMode {
 impl From<RenderMode> for Option<ParseMode> {
     fn from(mode: RenderMode) -> Option<ParseMode> {
         match mode {
-            RenderMode::Markdown => ParseMode::MarkdownV2.into(),
-            RenderMode::Html => ParseMode::HTML.into(),
+            RenderMode::Markdown | RenderMode::Html => ParseMode::HTML.into(),
             RenderMode::None => None,
         }
     }
@@ -41,7 +42,18 @@ pub struct Message {
 
 impl Message {
     pub fn render(&self) -> String {
-        format!("{}\n\n\\-\\-\\-\n{} \\- 雪風改", self.msg, self.node)
+        let msg = if self.mode == RenderMode::Markdown {
+            let mut options = Options::empty();
+            options.insert(Options::ENABLE_STRIKETHROUGH);
+            let parser = Parser::new_ext(&self.msg, options);
+            let mut html_out = String::new();
+            html::push_html(&mut html_out, parser);
+            html_out
+        } else {
+            self.msg.clone()
+        };
+        let msg = msg.replace("\n", "").replace("<p>", "").replace("</p>", "\n");
+        format!("{}\n\n---\n{} - 雪風改", msg, self.node)
     }
 
     pub fn parse_mode(&self) -> Option<ParseMode> {
