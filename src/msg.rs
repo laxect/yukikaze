@@ -1,5 +1,6 @@
 use pulldown_cmark::{html, Options, Parser};
 use serde::Deserialize;
+use serde::Serialize;
 use std::cmp::{Eq, PartialEq};
 use telegram_types::bot::{
     methods::{ChatTarget, SendMessage},
@@ -8,7 +9,7 @@ use telegram_types::bot::{
 
 use crate::CHAT_ID;
 
-#[derive(Deserialize, Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum RenderMode {
     Markdown,
     Html,
@@ -30,18 +31,18 @@ impl From<RenderMode> for Option<ParseMode> {
     }
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Message {
-    msg: String,
-    node: String,
+    pub msg: String,
+    pub node: String,
     #[serde(default)]
-    mode: RenderMode,
+    pub mode: RenderMode,
     #[serde(default)]
-    disable_notification: bool, // default to false
+    pub disable_notification: bool, // default to false
 }
 
 impl Message {
-    pub fn render(&self) -> String {
+    pub(crate) fn render(&self) -> String {
         let mut msg = if self.mode == RenderMode::Markdown {
             let mut options = Options::empty();
             options.insert(Options::ENABLE_STRIKETHROUGH);
@@ -57,11 +58,11 @@ impl Message {
         format!("{}\n---\n{} - 雪風改", msg, self.node)
     }
 
-    pub fn parse_mode(&self) -> Option<ParseMode> {
+    pub(crate) fn parse_mode(&self) -> Option<ParseMode> {
         self.mode.into()
     }
 
-    pub fn package(self) -> SendMessage<'static> {
+    pub(crate) fn package(self) -> SendMessage<'static> {
         let chat_id = ChatTarget::Id(ChatId(*CHAT_ID));
         let mut msg = SendMessage::new(chat_id, self.render());
         if let Some(parse_mode) = self.parse_mode() {
