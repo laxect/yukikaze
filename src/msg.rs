@@ -1,6 +1,5 @@
 use pulldown_cmark::{html, Options, Parser};
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::cmp::{Eq, PartialEq};
 use telegram_types::bot::{
     methods::{ChatTarget, SendMessage},
