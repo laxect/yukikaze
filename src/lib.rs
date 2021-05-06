@@ -7,4 +7,4 @@ static TOKEN: lazy::SyncLazy<String> = lazy::SyncLazy::new(|| std::env::var("TOK
 static CHAT_ID: lazy::SyncLazy<i64> = lazy::SyncLazy::new(|| std::env::var("CHAT_ID").unwrap().parse().unwrap());
 
 pub use bot::send_message;
-pub use msg::Message;
+pub use msg::{Message, RenderMode};
