@@ -1,9 +1,19 @@
 use stackdriver_logger::Service;
-use std::convert::Infallible;
+use std::convert::{Infallible, TryFrom};
 use warp::Filter;
-use yukikaze::{send_message, Message};
+use yukikaze::{send_message, template, template::InvalidPayload, Message};
 
 async fn handle(msg: Message) -> Result<&'static str, Infallible> {
+    send_message(msg).await;
+    log::info!("handle done");
+    Ok("done")
+}
+
+async fn handle_template(template: String, msg: bytes::Bytes) -> Result<&'static str, warp::reject::Rejection> {
+    let template = template::Templates::try_from(template).map_err(|_| warp::reject::not_found())?;
+    let msg = template
+        .render(&msg)
+        .map_err(|_| warp::reject::custom(InvalidPayload {}))?;
     send_message(msg).await;
     log::info!("handle done");
     Ok("done")
@@ -20,7 +30,14 @@ fn main() {
         .ok()
         .and_then(|port| port.parse().ok())
         .unwrap_or(8080);
-    let server = warp::post().and(warp::body::json()).and_then(handle);
+    let root = warp::path::end()
+        .and(warp::post())
+        .and(warp::body::json())
+        .and_then(handle);
+    let template = warp::path!("t" / String)
+        .and(warp::post())
+        .and(warp::body::bytes())
+        .and_then(handle_template);
     let runtime = tokio::runtime::Runtime::new().unwrap();
-    runtime.block_on(warp::serve(server).run(([0, 0, 0, 0], port)));
+    runtime.block_on(warp::serve(root.or(template)).run(([0, 0, 0, 0], port)));
 }
