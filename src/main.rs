@@ -10,10 +10,14 @@ async fn handle(msg: Message) -> Result<&'static str, Infallible> {
 }
 
 async fn handle_template(template: String, msg: bytes::Bytes) -> Result<&'static str, warp::reject::Rejection> {
-    let template = template::Templates::try_from(template).map_err(|_| warp::reject::not_found())?;
-    let msg = template
-        .render(&msg)
-        .map_err(|_| warp::reject::custom(InvalidPayload {}))?;
+    let template = template::Templates::try_from(template).map_err(|e| {
+        log::error!("{}", e);
+        warp::reject::not_found()
+    })?;
+    let msg = template.render(&msg).map_err(|e| {
+        log::error!("{}", e);
+        warp::reject::custom(InvalidPayload {})
+    })?;
     send_message(msg).await;
     log::info!("handle done");
     Ok("done")
