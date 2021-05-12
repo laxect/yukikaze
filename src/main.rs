@@ -41,7 +41,8 @@ fn main() {
     let template = warp::path!("t" / String)
         .and(warp::post())
         .and(warp::body::bytes())
-        .and_then(handle_template);
+        .and_then(handle_template)
+        .with(warp::log::log("yukikaze::tepmlate"));
     let runtime = tokio::runtime::Runtime::new().unwrap();
     runtime.block_on(warp::serve(root.or(template)).run(([0, 0, 0, 0], port)));
 }
