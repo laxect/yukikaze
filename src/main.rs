@@ -1,14 +1,20 @@
+#[cfg(feature = "server")]
 use stackdriver_logger::Service;
+#[cfg(feature = "server")]
 use std::convert::{Infallible, TryFrom};
+#[cfg(feature = "server")]
 use warp::Filter;
+#[cfg(feature = "server")]
 use yukikaze::{send_message, template, template::InvalidPayload, Message};
 
+#[cfg(feature = "server")]
 async fn handle(msg: Message) -> Result<&'static str, Infallible> {
     send_message(msg).await;
     log::info!("handle done");
     Ok("done")
 }
 
+#[cfg(feature = "server")]
 async fn handle_template(template: String, msg: bytes::Bytes) -> Result<&'static str, warp::reject::Rejection> {
     let template = template::Templates::try_from(template).map_err(|e| {
         log::error!("{}", e);
@@ -24,25 +30,28 @@ async fn handle_template(template: String, msg: bytes::Bytes) -> Result<&'static
 }
 
 fn main() {
-    let service = Service {
-        name: std::env!("CARGO_PKG_NAME").to_string(),
-        version: std::env!("CARGO_PKG_VERSION").to_string(),
-    };
-    stackdriver_logger::init_with(service.into(), true);
-    log_panics::init();
-    let port: u16 = std::env::var("PORT")
-        .ok()
-        .and_then(|port| port.parse().ok())
-        .unwrap_or(8080);
-    let root = warp::path::end()
-        .and(warp::post())
-        .and(warp::body::json())
-        .and_then(handle);
-    let template = warp::path!("t" / String)
-        .and(warp::post())
-        .and(warp::body::bytes())
-        .and_then(handle_template)
-        .with(warp::log::log("yukikaze::tepmlate"));
-    let runtime = tokio::runtime::Runtime::new().unwrap();
-    runtime.block_on(warp::serve(root.or(template)).run(([0, 0, 0, 0], port)));
+    #[cfg(feature = "server")]
+    {
+        let service = Service {
+            name: std::env!("CARGO_PKG_NAME").to_string(),
+            version: std::env!("CARGO_PKG_VERSION").to_string(),
+        };
+        stackdriver_logger::init_with(service.into(), true);
+        log_panics::init();
+        let port: u16 = std::env::var("PORT")
+            .ok()
+            .and_then(|port| port.parse().ok())
+            .unwrap_or(8080);
+        let root = warp::path::end()
+            .and(warp::post())
+            .and(warp::body::json())
+            .and_then(handle);
+        let template = warp::path!("t" / String)
+            .and(warp::post())
+            .and(warp::body::bytes())
+            .and_then(handle_template)
+            .with(warp::log::log("yukikaze::tepmlate"));
+        let runtime = tokio::runtime::Runtime::new().unwrap();
+        runtime.block_on(warp::serve(root.or(template)).run(([0, 0, 0, 0], port)));
+    }
 }

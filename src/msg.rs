@@ -11,7 +11,7 @@ use telegram_types::bot::{
 #[cfg(feature = "server")]
 use crate::CHAT_ID;
 
-#[cfg(feature = "server")]
+#[cfg(feature = "message")]
 #[derive(Serialize, Deserialize, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum RenderMode {
     Markdown,
@@ -19,13 +19,14 @@ pub enum RenderMode {
     None,
 }
 
-#[cfg(feature = "server")]
+#[cfg(feature = "message")]
 impl Default for RenderMode {
     fn default() -> Self {
         Self::None
     }
 }
 
+#[cfg(feature = "server")]
 impl From<RenderMode> for Option<ParseMode> {
     fn from(mode: RenderMode) -> Option<ParseMode> {
         match mode {
