@@ -1,13 +1,17 @@
+#[cfg(feature = "server")]
 use pulldown_cmark::{html, Options, Parser};
 use serde::{Deserialize, Serialize};
 use std::cmp::{Eq, PartialEq};
+#[cfg(feature = "server")]
 use telegram_types::bot::{
     methods::{ChatTarget, SendMessage},
     types::{ChatId, ParseMode},
 };
 
+#[cfg(feature = "server")]
 use crate::CHAT_ID;
 
+#[cfg(feature = "server")]
 #[derive(Serialize, Deserialize, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum RenderMode {
     Markdown,
@@ -15,6 +19,7 @@ pub enum RenderMode {
     None,
 }
 
+#[cfg(feature = "server")]
 impl Default for RenderMode {
     fn default() -> Self {
         Self::None
@@ -30,6 +35,7 @@ impl From<RenderMode> for Option<ParseMode> {
     }
 }
 
+#[cfg(feature = "message")]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Message {
     pub msg: String,
@@ -40,6 +46,7 @@ pub struct Message {
     pub disable_notification: bool, // default to false
 }
 
+#[cfg(feature = "server")]
 impl Message {
     pub(crate) fn render(&self) -> String {
         let mut msg = if self.mode == RenderMode::Markdown {
