@@ -1,9 +1,0 @@
-{
-  "extends": [
-    "config:base"
-  ],
-  "automerge": true,
-  "pinVersions": false,
-  "schedule": ["before 10am"],
-  "commitBody": "[skip ci]"
-}
