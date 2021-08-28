@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y curl build-essential
 
 # Install rust
 RUN curl https://sh.rustup.rs/ -sSf | \
-  sh -s -- -y --default-toolchain nightly-2021-04-23
+  sh -s -- -y --default-toolchain nightly-2021-08-17
 
 ENV PATH="/root/.cargo/bin:${PATH}"
 
