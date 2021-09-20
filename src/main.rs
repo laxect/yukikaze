@@ -1,37 +1,31 @@
-#[cfg(feature = "server")]
-use stackdriver_logger::Service;
-#[cfg(feature = "server")]
-use std::convert::{Infallible, TryFrom};
-#[cfg(feature = "server")]
-use warp::Filter;
-#[cfg(feature = "server")]
-use yukikaze::{send_message, template, template::InvalidPayload, Message};
-
-#[cfg(feature = "server")]
-async fn handle(msg: Message) -> Result<&'static str, Infallible> {
-    send_message(msg).await;
-    log::info!("handle done");
-    Ok("done")
-}
-
-#[cfg(feature = "server")]
-async fn handle_template(template: String, msg: bytes::Bytes) -> Result<&'static str, warp::reject::Rejection> {
-    let template = template::Templates::try_from(template).map_err(|e| {
-        log::error!("{}", e);
-        warp::reject::not_found()
-    })?;
-    let msg = template.render(&msg).map_err(|e| {
-        log::error!("{}", e);
-        warp::reject::custom(InvalidPayload {})
-    })?;
-    send_message(msg).await;
-    log::info!("handle done");
-    Ok("done")
-}
-
 fn main() {
     #[cfg(feature = "server")]
     {
+        use stackdriver_logger::Service;
+        use std::convert::{Infallible, TryFrom};
+        use warp::Filter;
+        use yukikaze::{send_message, template, template::InvalidPayload, Message};
+
+        async fn handle(msg: Message) -> Result<&'static str, Infallible> {
+            send_message(msg).await;
+            log::info!("handle done");
+            Ok("done")
+        }
+
+        async fn handle_template(template: String, msg: bytes::Bytes) -> Result<&'static str, warp::reject::Rejection> {
+            let template = template::Templates::try_from(template).map_err(|e| {
+                log::error!("{}", e);
+                warp::reject::not_found()
+            })?;
+            let msg = template.render(&msg).map_err(|e| {
+                log::error!("{}", e);
+                warp::reject::custom(InvalidPayload {})
+            })?;
+            send_message(msg).await;
+            log::info!("handle done");
+            Ok("done")
+        }
+
         let service = Service {
             name: std::env!("CARGO_PKG_NAME").to_string(),
             version: std::env!("CARGO_PKG_VERSION").to_string(),
