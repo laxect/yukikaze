@@ -1,5 +1,7 @@
-use crate::{Message, TOKEN};
+use crate::Message;
+use once_cell::sync::Lazy;
 
+static TOKEN: Lazy<String> = Lazy::new(|| std::env::var("TOKEN").unwrap());
 const TG_ENDPOINT: &str = "https://api.telegram.org";
 fn action(action: &str) -> String {
     format!("{}/bot{}/{}", TG_ENDPOINT, *TOKEN, action)
