@@ -2,7 +2,7 @@ fn main() {
     #[cfg(feature = "server")]
     {
         use stackdriver_logger::Service;
-        use std::convert::{Infallible, TryFrom};
+        use std::convert::Infallible;
         use warp::Filter;
         use yukikaze::{send_message, template, template::InvalidPayload, Message};
 

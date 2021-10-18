@@ -1737,7 +1737,7 @@ dependencies = [
 
 [[package]]
 name = "yukikaze"
-version = "0.5.2"
+version = "0.5.3"
 dependencies = [
  "aoitori",
  "bytes",
