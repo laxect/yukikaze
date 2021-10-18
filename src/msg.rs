@@ -60,7 +60,7 @@ mod message_impl {
         pub(crate) fn package(self) -> SendMessage<'static> {
             let chat_id = ChatTarget::Id(ChatId(*CHAT_ID));
             let mut msg = SendMessage::new(chat_id, self.render());
-            msg = msg.parse_mode(ParseMode::HTML);
+            msg.parse_mode = self.mode.into();
             if self.disable_notification {
                 msg.disable_notification = Some(true);
             }
