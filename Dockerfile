@@ -14,11 +14,9 @@ RUN cargo build --release
 
 FROM debian:buster
 
-COPY --from=builder \
-  /target/release/yukikaze \
-  /usr/local/bin/
+COPY --from=builder /target/release/yukikaze /usr/local/bin/
 
-ENV PORT 8080
+ENV PORT=8080
 ENV RUST_LOG="info"
 
 WORKDIR /root
