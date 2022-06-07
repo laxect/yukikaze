@@ -10,17 +10,17 @@ edition = "2021"
 aoitori = { git = "https://git.sr.ht/~fubuki/aoitori", optional = true }
 bytes = { version = "1.1.0", optional = true }
 html2md = "0.2.13"
-log = "0.4.14"
+log = "0.4.17"
 log-panics = "2.0.0"
-once_cell = "1.8.0"
-regex = { version = "1.5.4", optional = true }
-reqwest = { version = "0.11.5", features = ["json", "rustls-tls"], default-features = false, optional = true }
-serde = { version = "1.0.130", features = ["derive"] }
-serde_json = { version = "1.0.68", optional = true }
+once_cell = "1.12.0"
+regex = { version = "1.5.6", optional = true }
+reqwest = { version = "0.11.10", features = ["json", "rustls-tls"], default-features = false, optional = true }
+serde = { version = "1.0.137", features = ["derive"] }
+serde_json = { version = "1.0.81", optional = true }
 stackdriver_logger = { version = "0.8.0", optional = true }
 telegram_types = { version = "0.6.0", optional = true }
-tokio = { version = "1.12.0", features = ["rt", "rt-multi-thread"], optional = true }
-warp = { version = "0.3.1", optional = true }
+tokio = { version = "1.19.2", features = ["rt", "rt-multi-thread"], optional = true }
+warp = { version = "0.3.2", optional = true }
 
 [features]
 default = ["message", "server"]
