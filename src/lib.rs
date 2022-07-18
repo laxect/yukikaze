@@ -1,10 +1,9 @@
 #[cfg(feature = "server")]
-mod bot;
-mod msg;
-#[cfg(feature = "server")]
-pub mod template;
+pub mod server {
+    mod bot;
+    pub mod template;
+    pub use bot::send_message;
+}
 
-#[cfg(feature = "server")]
-pub use bot::send_message;
-#[cfg(feature = "message")]
+mod msg;
 pub use msg::{Message, RenderMode};

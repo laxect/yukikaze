@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::cmp::{Eq, PartialEq};
 
-#[cfg(feature = "message")]
 #[derive(Serialize, Deserialize, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum RenderMode {
     Markdown,
@@ -9,14 +8,12 @@ pub enum RenderMode {
     None,
 }
 
-#[cfg(feature = "message")]
 impl Default for RenderMode {
     fn default() -> Self {
         Self::None
     }
 }
 
-#[cfg(feature = "message")]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Message {
     pub msg: String,
