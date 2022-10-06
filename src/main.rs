@@ -12,10 +12,7 @@ async fn handle(msg: Message) -> Result<&'static str, Infallible> {
     Ok("done")
 }
 
-async fn handle_template(
-    template: String,
-    msg: bytes::Bytes,
-) -> Result<&'static str, warp::reject::Rejection> {
+async fn handle_template(template: String, msg: bytes::Bytes) -> Result<&'static str, warp::reject::Rejection> {
     let template = template::Templates::try_from(template).map_err(|e| {
         log::error!("{}", e);
         warp::reject::not_found()
