@@ -21,7 +21,9 @@ pub(super) fn render(input: &bytes::Bytes) -> Result<Message, serde_json::Error>
     let input: InoreaderWebhook = serde_json::from_slice(input)?;
     let content = input.items.into_iter().next().unwrap().summary.content; // should always have at least one item
     log::info!("{}", content);
-    let content = Regex::new(r#" *Ino.*?detected *"#).unwrap().replace_all(&content, "");
+    let content = Regex::new(r#" *Ino.*?detected *"#)
+        .unwrap()
+        .replace_all(&content, "");
     let content = html2md::parse_html(&content);
     log::info!("{}", content);
     let msg = Message {
