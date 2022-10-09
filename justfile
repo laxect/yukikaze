@@ -23,12 +23,14 @@ deploy: echo
 
 check: echo
     #!/usr/bin/env bash
+    set -euxo pipefail
     cargo check
     cargo clippy
     dprint check
 
 echo:
     #!/usr/bin/env bash
+    set -euxo pipefail
     echo app := {{app}}
     echo ver := {{V}}
     echo repo := {{repo}}
