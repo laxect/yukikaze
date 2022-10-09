@@ -36,5 +36,5 @@ server = [
   "tokio",
   "warp",
   "aoitori",
-  "once_cell"
+  "once_cell",
 ]
